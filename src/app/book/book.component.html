@@ -24,17 +24,17 @@
       </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-product>
+    <ng-template pTemplate="body" let-book>
       <tr style="border: 1px solid #ddd;">
         <td style="text-align: center; border: 1px solid #ddd;">
-          <a [routerLink]="['/book', product.id]">{{ product.title }}</a>
+          <a [routerLink]="['/book', book.id]">{{ book.title }}</a>
         </td>
-        <td style="text-align: center; border: 1px solid #ddd;">{{ product.auther }}</td>
-        <td style="text-align: center; border: 1px solid #ddd;">{{ product.rate | currency: 'USD' }}</td>
-        <td style="text-align: center; border: 1px solid #ddd;">{{ product.isSold ? 'Not Available' : 'Available' }}
+        <td style="text-align: center; border: 1px solid #ddd;">{{ book.auther }}</td>
+        <td style="text-align: center; border: 1px solid #ddd;">{{ book.rate | currency: 'USD' }}</td>
+        <td style="text-align: center; border: 1px solid #ddd;">{{ book.isSold ? 'Not Available' : 'Available' }}
         </td>
         <td style="text-align: center; border: 1px solid #ddd;">
-          <p-checkbox [(ngModel)]="product.check" [binary]="true" inputId="binary" />
+          <p-checkbox [(ngModel)]="book.check" [binary]="true" inputId="binary" />
         </td>
       </tr>
     </ng-template>
