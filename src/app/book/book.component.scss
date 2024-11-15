@@ -1,0 +1,18 @@
+/* Center align all columns */
+.p-table th,
+.p-table td {
+    text-align: center;
+}
+
+/* Ensure the checkbox is centered as well */
+.p-table td .p-checkbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Optional: Apply min-width or custom styling to header */
+.p-table th {
+    min-width: 150px;
+    /* Adjust this to your desired minimum width */
+}
