@@ -5,39 +5,41 @@
 <div class="card">
   <p-table [value]="books" [tableStyle]="{'min-width': '60rem'}" sortMode="multiple">
     <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="title" style="width:20%; text-align: center;">
+      <tr style="border: 1px solid #ddd;">
+        <th pSortableColumn="title" style="width:20%; text-align: center; border: 1px solid #ddd;">
           Title <p-sortIcon field="title" />
         </th>
-        <th pSortableColumn="auther" style="width:20%; text-align: center;">
+        <th pSortableColumn="auther" style="width:20%; text-align: center; border: 1px solid #ddd;">
           Author <p-sortIcon field="auther" />
         </th>
-        <th pSortableColumn="rate" style="width:20%; text-align: center;">
+        <th pSortableColumn="rate" style="width:20%; text-align: center; border: 1px solid #ddd;">
           Price <p-sortIcon field="rate" />
         </th>
-        <th pSortableColumn="isSold" style="width:20%; text-align: center;">
+        <th pSortableColumn="isSold" style="width:20%; text-align: center; border: 1px solid #ddd;">
           Available <p-sortIcon field="isSold" />
         </th>
-        <th style="width: 4rem; text-align: center;">
+        <th style="width: 4rem; text-align: center; border: 1px solid #ddd;">
           <p-checkbox [binary]="true" inputId="binary" (click)="selectAll()" />
         </th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-product>
-      <tr>
-        <td style="text-align: center;">
+      <tr style="border: 1px solid #ddd;">
+        <td style="text-align: center; border: 1px solid #ddd;">
           <a [routerLink]="['/book', product.id]">{{ product.title }}</a>
         </td>
-        <td style="text-align: center;">{{ product.auther }}</td>
-        <td style="text-align: center;">{{ product.rate | currency: 'USD' }}</td>
-        <td style="text-align: center;">{{ product.isSold ? 'Not Available' : 'Available' }}</td>
-        <td style="text-align: center;">
+        <td style="text-align: center; border: 1px solid #ddd;">{{ product.auther }}</td>
+        <td style="text-align: center; border: 1px solid #ddd;">{{ product.rate | currency: 'USD' }}</td>
+        <td style="text-align: center; border: 1px solid #ddd;">{{ product.isSold ? 'Not Available' : 'Available' }}
+        </td>
+        <td style="text-align: center; border: 1px solid #ddd;">
           <p-checkbox [(ngModel)]="product.check" [binary]="true" inputId="binary" />
         </td>
       </tr>
     </ng-template>
   </p-table>
+
 
 </div>
 
