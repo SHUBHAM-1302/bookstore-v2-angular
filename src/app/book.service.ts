@@ -9,18 +9,18 @@ export class BookService {
 
   constructor(private http: HttpClient) { }
 
-  private apiUrl = `http://localhost:3070/v1/md/book/`;
-
   getAllBooks(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
-  }
-  getBookById(id: number): Observable<any> {
-    const url = `http://localhost:3070/v1/md/book/${encodeURIComponent(id)}/`
+    const url = `http://localhost:3070/api/books`
     return this.http.get<any>(url);
   }
 
-  updateBook(id: number, book: any) {
-    const url = `http://localhost:3070/v1/md/book/${encodeURIComponent(id)}/`
+  getBookById(bookId: number): Observable<any> {
+    const url = `http://localhost:3070/api/books/${encodeURIComponent(bookId)}`
+    return this.http.get<any>(url);
+  }
+
+  updateBook(bookId: number) {
+    const url = `http://localhost:3070/api/books/${encodeURIComponent(bookId)}/purchase`
     const patchHeaders: HttpHeaders = new HttpHeaders({
       'Content-Type': 'application/json-patch+json',
       Accept: 'application/json',
@@ -28,6 +28,6 @@ export class BookService {
     const patchHttpOptions = {
       headers: patchHeaders,
     };
-    return this.http.put<any>(url, book, patchHttpOptions)
+    return this.http.put<any>(url, patchHttpOptions)
   }
 }

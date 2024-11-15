@@ -1,18 +1,43 @@
-/* Center align all columns */
-.p-table th,
-.p-table td {
+.fontSize {
+    font-size: 1.5rem;
+}
+
+.title {
+    font-size: 2rem;
+    color: rgb(9, 201, 201);
+    margin-block: 3rem;
     text-align: center;
 }
 
-/* Ensure the checkbox is centered as well */
-.p-table td .p-checkbox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.tableData {
+    font-size: 1.2rem;
 }
 
-/* Optional: Apply min-width or custom styling to header */
-.p-table th {
-    min-width: 150px;
-    /* Adjust this to your desired minimum width */
+table {
+    margin-inline: 4rem;
+}
+
+.mat-mdc-table {
+    min-width: 90%;
+}
+
+.tableContainer {
+    border: 2px solid rgb(145, 202, 208);
+}
+
+.mat-mdc-header-row {
+    font-size: 1.5rem;
+    background-color: rgb(145, 202, 208) !important;
+    color: black;
+}
+
+.mat-mdc-row {
+    background-color: rgb(222, 242, 248);
+}
+
+.purchaseBttn {
+    font-size: 1rem;
+    background-color: rgb(104, 216, 216) !important;
+    color: white !important;
+    ;
 }

@@ -1,77 +1,54 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../book.service';
-import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
-import { CheckboxModule } from 'primeng/checkbox';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { Book } from '../entity/Book';
 
-class book {
-  id!: number;
-  title: string | undefined;;
-  rate: string | undefined;;
-  auther: string | undefined;;
-  isSold: boolean | undefined;;
-  check: boolean | undefined;;
-  description?: string | undefined;
-}
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
-  standalone: true,  // Mark this as a standalone component
-  imports: [CommonModule, RouterModule, ButtonModule, TableModule, CheckboxModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule, FormsModule, MatTableModule, MatCheckboxModule, MatButtonModule],
   styleUrls: ['./book.component.scss'],
   providers: [BookService]
 })
 export class BookComponent implements OnInit {
 
-  books!: book[];
-  selectedProducts!: any;
-  clickd: boolean = false
+  books!: MatTableDataSource<Book>;
+  selectionOfBook: SelectionModel<Book>;
+  displayedColumns: string[] = ['select', 'title', 'author', 'price'];
 
-  constructor(
-    private readonly bookListService: BookService,
-  ) { }
+  constructor(private readonly bookListService: BookService,
+  ) {
+    this.selectionOfBook = new SelectionModel<Book>(true, [])
+  }
 
   ngOnInit() {
     this.getAllBooks()
   }
 
+  /**
+   * method use to get all books
+   */
   getAllBooks() {
     this.bookListService.getAllBooks().subscribe({
-      next: (value) => {
-        let list = [];
-        for (let i = 0; i < value.length; i++) {
-          let b = new book();
-          b.id = value[i].bookId
-          b.auther = value[i].auther
-          b.rate = value[i].rate
-          b.title = value[i].title
-          b.isSold = value[i].isSold
-          b.check = false
-          if (!value[i].isSold) { list.push(b); }
-
-        }
-        this.books = list
+      next: (books) => {
+        this.books = new MatTableDataSource<Book>(books);
       },
     })
   }
 
-
+  /**
+   * method use to sold books
+   */
   updateStatus() {
-    let checkd = this.books.filter(f => f.check == true);
-    checkd.forEach(f => {
-      let book = {
-        "bookId": f.id,
-        "title": f.title,
-        "auther": f.auther,
-        "rate": f.rate,
-        "isSold": f.id,
-        "description": f.description
-      }
-      this.bookListService.updateBook(f.id, book).subscribe({
+    this.selectionOfBook.selected.forEach(f => {
+      this.bookListService.updateBook(f.bookId).subscribe({
         next: (value: any) => {
           this.getAllBooks()
         },
@@ -79,9 +56,23 @@ export class BookComponent implements OnInit {
     })
   }
 
-
-  selectAll() {
-    this.clickd = !this.clickd
-    this.books.forEach(f => f.check = this.clickd)
+  isAllSelected() {
+    const numSelected = this.selectionOfBook.selected.length;
+    const numRows = this.books.data.length;
+    return numSelected === numRows;
   }
+
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selectionOfBook.clear() :
+      this.books.data.forEach(row => this.selectionOfBook.select(row));
+  }
+
+  checkboxLabel(row?: Book): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selectionOfBook.isSelected(row) ? 'deselect' : 'select'} row ${row.bookId + 1}`;
+  }
+
 }
