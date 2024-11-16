@@ -7,6 +7,7 @@
     color: rgb(253, 144, 35);
     margin-block: 3rem;
     text-align: center;
+    font-weight: 600;
 }
 
 .tableData {
@@ -44,4 +45,8 @@ table {
 
 th.mat-sort-header-sorted {
     color: black;
+}
+
+.fontSizes {
+    font-size: 1.5rem !important;
 }

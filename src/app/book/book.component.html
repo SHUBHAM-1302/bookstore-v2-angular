@@ -3,9 +3,13 @@
 </h3>
 
 <div style="text-align: right; padding-right: 6rem;">
-  <button mat-button (click)="openDialog()"> <mat-icon>filter_list</mat-icon>Filter </button>
+
 </div>
 <div>
+  <div style="margin-inline: 14rem;margin-block: 1rem;text-align: right;"><button mat-button (click)="openDialog()"
+      class="fontSizes">
+      <mat-icon>filter_list</mat-icon>Filter
+    </button></div>
   <table mat-table [dataSource]="filtredBookList" class="tableContainer" matSort
     (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
     <ng-container matColumnDef="select">
