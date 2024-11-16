@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { BookService } from '../book.service';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -8,22 +8,28 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { Book } from '../entity/Book';
+import { MatInputModule } from '@angular/material/input';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { BookListFilterComponent } from '../book-list-filter/book-list-filter.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, MatTableModule, MatCheckboxModule, MatButtonModule],
+  imports: [CommonModule, RouterModule, FormsModule, MatTableModule, MatCheckboxModule, MatButtonModule, MatDialogModule, MatInputModule, MatIconModule],
   styleUrls: ['./book.component.scss'],
   providers: [BookService]
 })
 export class BookComponent implements OnInit {
 
   books!: MatTableDataSource<Book>;
+  filtredBookList!: MatTableDataSource<Book>;
   selectionOfBook: SelectionModel<Book>;
   displayedColumns: string[] = ['select', 'title', 'author', 'price'];
 
   constructor(private readonly bookListService: BookService,
+    public dialog: MatDialog
   ) {
     this.selectionOfBook = new SelectionModel<Book>(true, [])
   }
@@ -32,12 +38,37 @@ export class BookComponent implements OnInit {
     this.getAllBooks()
   }
 
+
+  openDialog() {
+    let dialogRef = this.dialog.open(BookListFilterComponent, {
+
+      width: '250px',
+      data: { title: null, author: null, price: null }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.filterBookList(result.title, result.author, result.price)
+    });
+  }
+
+
+  filterBookList(title?: string, author?: string, price?: string) {
+    if (price) {
+      this.books.data.filter(f => f.title == title?.trim() || f.author == author?.trim())
+      this.filtredBookList.data = this.books.data.filter(f => Number(f.price.replace(/[^0-9.-]/g, '')) <= parseFloat(price));
+    } else {
+      this.filtredBookList.data = this.books.data.filter(f => f.title == title?.trim() || f.author == author?.trim())
+    }
+  }
+
+
   /**
    * method use to get all books
    */
   getAllBooks() {
     this.bookListService.getAllBooks().subscribe({
       next: (books) => {
+        this.filtredBookList = new MatTableDataSource<Book>(books);
         this.books = new MatTableDataSource<Book>(books);
       },
     })
