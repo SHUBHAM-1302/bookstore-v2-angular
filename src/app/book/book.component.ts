@@ -25,11 +25,12 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
   providers: [BookService]
 })
 export class BookComponent implements OnInit {
-  private _liveAnnouncer = inject(LiveAnnouncer);
+
   books!: MatTableDataSource<Book>;
   filtredBookList!: MatTableDataSource<Book>;
   selectionOfBook: SelectionModel<Book>;
   displayedColumns: string[] = ['select', 'title', 'author', 'price'];
+  private _liveAnnouncer = inject(LiveAnnouncer);
   @ViewChild(MatSort) sort: MatSort = new MatSort();
 
   constructor(
@@ -44,7 +45,9 @@ export class BookComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.filtredBookList.sort = this.sort;
+    setTimeout(() => {
+      this.filtredBookList.sort = this.sort;
+    }, 1000);
   }
 
   /**
@@ -53,6 +56,7 @@ export class BookComponent implements OnInit {
   getAllBooks() {
     this.bookListService.getAllBooks().subscribe({
       next: (books) => {
+        books.sort((a: any, b: any) => a.title.localeCompare(b.title));  // sort based on title 
         this.filtredBookList = new MatTableDataSource<Book>(books);
         this.books = new MatTableDataSource<Book>(books);
       },
@@ -74,7 +78,7 @@ export class BookComponent implements OnInit {
 
   isAllSelected() {
     const numSelected = this.selectionOfBook.selected.length;
-    const numRows = this.books.data.length;
+    const numRows = this.books?.data.length;
     return numSelected === numRows;
   }
 
@@ -99,19 +103,20 @@ export class BookComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.filterBookList(result.title, result.author, result.price)
+      if (result) this.filterBookList(result.title, result.author, result.price);
     });
   }
 
 
-  filterBookList(title?: string, author?: string, price?: string) {
-    if (price) {
-      this.books.data.filter(f => f.title == title?.trim() || f.author == author?.trim())
-      this.filtredBookList.data = this.books.data.filter(f => Number(f.price.replace(/[^0-9.-]/g, '')) <= parseFloat(price));
-    } else {
-      this.filtredBookList.data = this.books.data.filter(f => f.title == title?.trim() || f.author == author?.trim())
-    }
+  filterBookList(title?: string, author?: string, price?: number) {
+    this.filtredBookList.data = this.books.data
+      .filter(s => (title == undefined || title == null) || this.isPresent(s.title, title))
+      .filter(s => (author == undefined || author == null) || this.isPresent(s.author, author))
+      .filter(s => (price == undefined || price == null) || Number(s.price.replace(/[^0-9.-]/g, '')) <= price)
+  }
+
+  isPresent(s?: string, b?: string) {
+    return s?.toLowerCase().includes(b != undefined ? b.toLowerCase() : "")
   }
 
 

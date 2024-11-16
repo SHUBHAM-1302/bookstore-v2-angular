@@ -1,5 +1,5 @@
 export interface DialogData {
     author: string;
     title: string;
-    price: string;
+    price: number;
 }
